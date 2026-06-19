@@ -6,6 +6,10 @@ import Field from "./Field";
 import Button from "../components/Button";
 import { useAuth } from "@/context/AuthContext";
 
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+
 export default function AuthForm() {
   const [mode, setMode] = useState("login");
   const [errors, setErrors] = useState({ confirm: "", form: "" });
@@ -16,7 +20,6 @@ export default function AuthForm() {
   const confirmRef = useRef(null);
 
   const { loginHelper, fetchCurrentUser } = useAuth();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const isLogin = mode === "login";
 

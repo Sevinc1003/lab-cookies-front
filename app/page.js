@@ -112,7 +112,7 @@ export default function Home() {
           {!loading && user ? (
             <>
               <span className="text-xs text-accent tracking-widest hidden sm:inline">
-                {"// logged_in_as: "}
+                {}
                 <span className="text-primary font-bold">
                   {user.name || user.email}
                 </span>
@@ -126,7 +126,7 @@ export default function Home() {
             </>
           ) : (
             <Button href="/auth" variant="outline" size="sm">
-              &gt; access_terminal
+              &gt;
             </Button>
           )}
         </div>
@@ -135,7 +135,7 @@ export default function Home() {
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="scanlines px-6 sm:px-10 py-20 sm:py-28 text-center border-b border-panel-border">
         <p className="text-secondary text-xs uppercase tracking-[0.4em] mb-4">
-          {"// dev grid online"}
+          {}
         </p>
         <h1 className="text-4xl sm:text-6xl font-bold text-primary max-w-3xl mx-auto leading-tight">
           Build in the dark.
@@ -241,7 +241,7 @@ export default function Home() {
       {/* ── Footer ──────────────────────────────────────────────── */}
       <footer className="mt-auto px-6 sm:px-10 py-8 border-t border-primary/30 text-center text-xs text-muted">
         <span className="text-primary neon-text tracking-[0.3em]">DEVFORGE</span>{" "}
-        {"// © 2099 — all signals encrypted."}
+        {"© 2099 — all signals encrypted."}
       </footer>
     </div>
   );
