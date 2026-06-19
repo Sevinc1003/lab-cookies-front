@@ -1,4 +1,7 @@
+"use client";
+
 import Button from "./components/Button";
+import { useAuth } from "@/context/AuthContext";
 
 // ── Placeholder content (static — no fetching) ─────────────────────────
 const projects = [
@@ -96,6 +99,8 @@ function TagChip({ children }) {
 
 
 export default function Home() {
+  const { user, logout, loading } = useAuth();
+
   return (
     <div className="flex flex-col flex-1 text-foreground">
       {/* ── Top nav ─────────────────────────────────────────────── */}
@@ -103,9 +108,28 @@ export default function Home() {
         <span className="glitch neon-text text-primary text-xl font-bold tracking-[0.3em]">
           DEVFORGE
         </span>
-        <Button href="/auth" variant="outline" size="sm">
-          &gt; access_terminal
-        </Button>
+        <div className="flex items-center gap-4">
+          {!loading && user ? (
+            <>
+              <span className="text-xs text-accent tracking-widest hidden sm:inline">
+                {"// logged_in_as: "}
+                <span className="text-primary font-bold">
+                  {user.name || user.email}
+                </span>
+              </span>
+              <button
+                onClick={logout}
+                className="text-xs uppercase tracking-widest text-red-400 border border-red-400/50 px-3 py-1.5 rounded-sm hover:bg-red-400/10 transition-colors cursor-pointer"
+              >
+                disconnect
+              </button>
+            </>
+          ) : (
+            <Button href="/auth" variant="outline" size="sm">
+              &gt; access_terminal
+            </Button>
+          )}
+        </div>
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
@@ -122,9 +146,17 @@ export default function Home() {
           DevForge is the underground community for builders, breakers, and
           dreamers. Browse projects, trade snippets, and jack in.
         </p>
-        <Button href="/auth" className="mt-10">
-          Log in →
-        </Button>
+        {!loading && user ? (
+          <div className="mt-10 inline-block bg-panel border border-primary/40 px-6 py-3 rounded-md max-w-xs mx-auto">
+            <p className="text-xs text-primary font-mono tracking-wider">
+              [ Welcome back, operator. Systems nominal. ]
+            </p>
+          </div>
+        ) : (
+          <Button href="/auth" className="mt-10">
+            Log in →
+          </Button>
+        )}
       </section>
 
       {/* ── Projects ────────────────────────────────────────────── */}

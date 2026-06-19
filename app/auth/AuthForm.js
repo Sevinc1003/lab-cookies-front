@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import Field from "./Field";
 import Button from "../components/Button";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AuthForm() {
   const [mode, setMode] = useState("login");
@@ -14,6 +15,9 @@ export default function AuthForm() {
   const [confirm, setConfirm] = useState("");
   const confirmRef = useRef(null);
 
+  const { loginHelper, fetchCurrentUser } = useAuth();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const isLogin = mode === "login";
 
   async function sendLoginRequest() {
@@ -23,11 +27,12 @@ export default function AuthForm() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
@@ -40,8 +45,9 @@ export default function AuthForm() {
 
       const data = await response.json();
       console.log("Logged in:", data);
-      // I need data.token
-      localStorage.setItem("token", data.token);
+
+      await fetchCurrentUser();
+      loginHelper(data.user || data);
 
       setErrors((prev) => ({ ...prev, form: "" }));
     } catch (err) {
@@ -56,7 +62,6 @@ export default function AuthForm() {
 
     sendLoginRequest();
 
-    // The values you need are already in state:
     console.log("login submit", { email, password });
   }
 
@@ -68,11 +73,12 @@ export default function AuthForm() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/auth/signup", {
+      const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
@@ -85,6 +91,11 @@ export default function AuthForm() {
 
       const data = await response.json();
       console.log("Signed up:", data);
+      
+      // Auto-fetch user details after successful signup and login flow
+      await fetchCurrentUser();
+      loginHelper(data.user || data);
+
       setErrors((prev) => ({ ...prev, form: "" }));
     } catch (err) {
       console.error("Error:", err.message);
